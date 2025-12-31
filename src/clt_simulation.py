@@ -28,6 +28,7 @@ for n in n_values:
     plt.grid(True)
     plt.savefig(f"{output_dir}/clt_histogram_n{n}.png", dpi=300)
     plt.close()
+    close()
 
     plt.figure(figsize=(5, 5))
     stats.probplot(z, dist="norm", plot=plt)
