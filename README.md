@@ -1,5 +1,5 @@
 
-# IE221 – TeamWork 3 (Group 07)
+# IE221 – TEAMWORK 3 (GROUP 07)
 
 ## Project Description
 This project is prepared for IE221 – Probability course.
