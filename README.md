@@ -13,7 +13,8 @@ All simulations are implemented in Python.
 ## Team Members
 - Group 07
 Zeynep Buse Yıldırım-2111021022
-Nursu Topsakal-2211021013 
+Nursu Topsakal-2211021013
+Şevval Güçlü- 2311021010
 
 
 ## Installation
