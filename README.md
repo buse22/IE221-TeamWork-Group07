@@ -12,7 +12,7 @@ All simulations are implemented in Python.
 
 ## Team Members
 - Group 07
-(Add student names and IDs here)
+Zeynep Buse Yıldırım-2111021022
 
 ## Installation
 Install required dependencies using:
