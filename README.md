@@ -14,6 +14,7 @@ All simulations are implemented in Python.
 - Group 07
 - Zeynep Buse Yıldırım – 2111021022
 - Şevval Güçlü - 2311021010
+- Nursu Topsakal - 2211021013
 
 
 ## Installation
