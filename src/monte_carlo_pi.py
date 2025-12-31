@@ -1,28 +1,24 @@
-
 import numpy as np
 import matplotlib.pyplot as plt
-import os
 import math
 
-n = 10000
+num_points = 10000
 np.random.seed(42)
 
-x = np.random.uniform(0, 1, n)
-y = np.random.uniform(0, 1, n)
+x_points = np.random.rand(num_points)
+y_points = np.random.rand(num_points)
 
-inside = x**2 + y**2 <= 1
-pi_estimates = 4 * np.cumsum(inside) / np.arange(1, n + 1)
+inside_circle = (x_points**2 + y_points**2) <= 1
+
+pi_values = 4 * np.cumsum(inside_circle) / np.arange(1, num_points + 1)
+
 
 plt.figure(figsize=(10, 6))
-plt.plot(pi_estimates, label="Monte Carlo π Estimate")
-plt.axhline(y=math.pi, linestyle="--", label="True π")
-plt.xlabel("Number of Points (n)")
-plt.ylabel("π Estimate")
-plt.title("Monte Carlo Estimation of π")
+plt.plot(pi_values, label="Monte Carlo π Estimate")
+plt.axhline(math.pi, linestyle="--", color="red", label="True π")
+plt.xlabel("Number of Points")
+plt.ylabel("π Value")
+plt.title("Monte Carlo Simulation for Estimating π")
 plt.legend()
 plt.grid(True)
-
-output_dir = "../results/figures"
-os.makedirs(output_dir, exist_ok=True)
-plt.savefig(f"{output_dir}/pi_estimation.png", dpi=300)
 plt.show()
