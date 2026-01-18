@@ -1,0 +1,124 @@
+import os
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import stats
+
+np.random.seed(42)
+
+# --------- Distributions ----------
+def rvs_uniform(size):
+    return np.random.uniform(0, 1, size)
+
+def rvs_exponential(size):
+    return np.random.exponential(scale=1.0, size=size)  # lambda=1 => scale=1
+
+def rvs_pareto(alpha, xm, size):
+    # If Y ~ Pareto(alpha) with support y>=1 and pdf alpha*y^(-alpha-1)
+    # then X = xm*Y has pdf alpha*xm^alpha / x^(alpha+1), x>=xm
+    y = (1 + np.random.pareto(alpha, size=size))  # support y>=1
+    return xm * y
+
+def rvs_cauchy(size):
+    return stats.cauchy.rvs(loc=0, scale=1, size=size, random_state=None)
+
+DISTS = {
+    "Uniform_0_1": {
+        "rvs": rvs_uniform,
+        "mean": 0.5,
+        "var": 1/12
+    },
+    "Exponential_lambda1": {
+        "rvs": rvs_exponential,
+        "mean": 1.0,
+        "var": 1.0
+    },
+    "Pareto_alpha3_xm1": {
+        "rvs": lambda size: rvs_pareto(alpha=3.0, xm=1.0, size=size),
+        "mean": 1.5,   # 3/(3-1)
+        "var": 0.75    # 3/4
+    },
+    "Pareto_alpha1p5_xm1": {
+        "rvs": lambda size: rvs_pareto(alpha=1.5, xm=1.0, size=size),
+        "mean": 3.0,      # 1.5/(0.5)
+        "var": np.inf     # does not exist
+    },
+    "Cauchy_0_1": {
+        "rvs": rvs_cauchy,
+        "mean": None,     # undefined
+        "var": None       # undefined
+    }
+}
+
+# ---------- Helpers ----------
+def ensure_dir(path):
+    os.makedirs(path, exist_ok=True)
+
+def savefig(path):
+    plt.tight_layout()
+    plt.savefig(path, dpi=200)
+    plt.close()
+
+# ---------- SLLN ----------
+def slln_analysis(dist_name, rvs_fn, out_dir, n=10000):
+    x = rvs_fn(n)
+    cum_mean = np.cumsum(x) / np.arange(1, n+1)
+
+    plt.figure()
+    plt.plot(cum_mean)
+    plt.xlabel("k")
+    plt.ylabel("Cumulative mean")
+    plt.title(f"SLLN: Cumulative Mean - {dist_name}")
+    savefig(os.path.join(out_dir, f"slln_cummean_n{n}.png"))
+
+# ---------- CLT ----------
+def clt_analysis(dist_name, rvs_fn, out_dir, mean, var, n_list=(2,5,10,30,50,100), m=1000):
+    for n in n_list:
+        # Generate m replications of sums
+        samples = rvs_fn((m, n))
+        sums = samples.sum(axis=1)
+
+        # Standardize if possible
+        if mean is not None and var is not None and np.isfinite(var):
+            z = (sums - n*mean) / np.sqrt(n*var)
+        else:
+            # If mean/var undefined, still visualize "standardized-like" by sample mean & std (for exploration)
+            z = (sums - np.mean(sums)) / (np.std(sums) + 1e-12)
+
+        # Histogram
+        plt.figure()
+        plt.hist(z, bins=30, density=True)
+        plt.title(f"CLT Histogram - {dist_name} (n={n}, m={m})")
+        plt.xlabel("Standardized sum")
+        plt.ylabel("Density")
+        savefig(os.path.join(out_dir, f"clt_hist_n{n}_m{m}.png"))
+
+        # Q-Q plot
+        plt.figure()
+        stats.probplot(z, dist="norm", plot=plt)
+        plt.title(f"Normal Q-Q - {dist_name} (n={n}, m={m})")
+        savefig(os.path.join(out_dir, f"clt_qq_n{n}_m{m}.png"))
+
+def run_all(base_results="results"):
+    ensure_dir(base_results)
+    for name, info in DISTS.items():
+        ddir = os.path.join(base_results, name)
+        ensure_dir(ddir)
+
+        # SLLN
+        slln_analysis(name, info["rvs"], ddir, n=10000)
+
+        # CLT
+        clt_analysis(
+            name,
+            info["rvs"],
+            ddir,
+            mean=info["mean"],
+            var=info["var"],
+            n_list=(2,5,10,30,50,100),
+            m=1000
+        )
+
+    print("Done. Check the results/ folder.")
+
+if __name__ == "__main__":
+    run_all()
