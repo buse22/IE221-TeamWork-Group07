@@ -5,7 +5,7 @@
   - Zeynep Buse Yıldırım – 2111021022  
   - Nursu Topsakal – 2211021013  
   - Şevval Güçlü – 2311021010
-   -Tuğçe Duymaz - 22110210 
+  - Tuğçe Duymaz - 22110210 
 ---
 
 ## Repository Overview
