@@ -55,9 +55,7 @@ pip install -r requirements.txt
 ## Project Structure
 IE221-TeamWork-Group07/
 ├── src_tw5/
-│   ├── slln_simulation.py
-│   ├── clt_simulation.py
-│   └── monte_carlo_pi.py
+│   └── code/
 │
 ├── results_tw5/
 │   ├── Cauchy_0_1/
